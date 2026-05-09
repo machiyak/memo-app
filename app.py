@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
+from flask import Flask, render_template, request, redirect, url_for
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 
@@ -49,12 +50,14 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
 
+        password_hash = generate_password_hash(password)
+
         conn = get_db_connection()
 
         try:
             conn.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
-            (username, password)
+            "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+            (username, password_hash)
             )
             conn.commit()
         except sqlite3.IntegrityError:
