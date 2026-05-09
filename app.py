@@ -14,7 +14,7 @@ def get_db_connection():
     return conn
 
 
-# /というURLでGET, POSTの両方を受け付ける
+# /でGET, POSTの両方を受け付ける
 @app.route("/", methods=["GET", "POST"])
 def index():
     conn = get_db_connection()
@@ -40,6 +40,18 @@ def index():
 
     # index.htmlをレンダリングする
     return render_template("index.html", memos=memos)
+
+# /registerでregister.htmlをレンダリング
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    # ユーザー名とパスワードが入力されて登録ボタンが押されたらブラウザ上でで表示する
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        return f"username={username}, password={password}"
+    
+    return render_template("register.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
