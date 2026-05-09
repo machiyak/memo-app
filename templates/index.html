@@ -6,6 +6,17 @@
 </head>
 <body>
     <h1>Memo App</h1>
-    <p>memoアプリをFlaskで作ってみる</p>
+    
+    <!-- メモ入力フォーム -->
+     <form method="post">
+        <textarea name="content" rows="4" cols="50"></textarea>
+        <button type="submit">送信</button>
+     </form>
+
+    <!-- pythonで記録した変数を表示 -->
+    {% if content %}
+        <h2>送信されたメモ</h2>
+        <p>{{ content }}</p>
+    {% endif %}
 </body>
 </html>
