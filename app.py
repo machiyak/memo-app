@@ -44,12 +44,22 @@ def index():
 # /registerでregister.htmlをレンダリング
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    # ユーザー名とパスワードが入力されて登録ボタンが押されたらブラウザ上でで表示する
+    # ユーザー名とパスワードが入力されて登録ボタンが押されたらDBに保存する
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
 
-        return f"username={username}, password={password}"
+        conn = get_db_connection()
+
+        conn.execute(
+            "INSERT INTO users (username, password) VALUES (?, ?)",
+            (username, password)
+        )
+
+        conn.commit()
+        conn.close()
+        # indexに戻る
+        return redirect(url_for("index"))
     
     return render_template("register.html")
 
