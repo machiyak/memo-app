@@ -51,12 +51,16 @@ def register():
 
         conn = get_db_connection()
 
-        conn.execute(
+        try:
+            conn.execute(
             "INSERT INTO users (username, password) VALUES (?, ?)",
             (username, password)
-        )
+            )
+            conn.commit()
+        except sqlite3.IntegrityError:
+            conn.close()
+            return "このユーザー名は既に使われています。"
 
-        conn.commit()
         conn.close()
         # indexに戻る
         return redirect(url_for("index"))
