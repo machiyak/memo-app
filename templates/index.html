@@ -13,10 +13,10 @@
         <button type="submit">送信</button>
      </form>
 
-    <!-- pythonで記録した変数を表示 -->
-    {% if content %}
+    <!-- pythonで記録したlistを表示 -->
+    {% for memo in memos %}
         <h2>送信されたメモ</h2>
-        <p>{{ content }}</p>
-    {% endif %}
+        <p>{{ memo }}</p>
+    {% endfor %}
 </body>
 </html>
