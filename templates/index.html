@@ -8,15 +8,17 @@
     <h1>Memo App</h1>
     
     <!-- メモ入力フォーム -->
-     <form method="post">
+    <form method="post">
         <textarea name="content" rows="4" cols="50"></textarea>
         <button type="submit">送信</button>
-     </form>
+    </form>
 
-    <!-- pythonで記録したlistを表示 -->
+    <h2>メモ一覧</h2>
+
+    <!-- DBに記録したメモを表示 -->
     {% for memo in memos %}
-        <h2>送信されたメモ</h2>
-        <p>{{ memo }}</p>
+        <p>{{ memo["content"] }}</p>
+        <small>{{ memo["created_at"] }}</small>
     {% endfor %}
 </body>
 </html>
