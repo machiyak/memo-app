@@ -10,7 +10,7 @@
     <!-- メモ入力フォーム -->
     <form method="post">
         <textarea name="content" rows="4" cols="50"></textarea>
-        <button type="submit">送信</button>
+        <button type="submit">保存</button>
     </form>
 
     <h2>メモ一覧</h2>
@@ -19,6 +19,7 @@
     {% for memo in memos %}
         <p>{{ memo["content"] }}</p>
         <small>{{ memo["created_at"] }}</small>
+        <hr>
     {% endfor %}
 </body>
 </html>
