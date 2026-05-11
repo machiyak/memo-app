@@ -1,8 +1,10 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
-from werkzeug.security import generate_password_hash
+from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+# 一次的な秘密鍵（本来の開発ではやってはいけない）、環境変数から読み取る
+app.secret_key = "dev-secret-key"
 
 # memo用DB
 DB_NAME = "memo.db"
