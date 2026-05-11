@@ -72,5 +72,34 @@ def register():
     
     return render_template("register.html")
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+
+        user = conn.execute(
+            "SELECT * FROM users WHERE username = ?",
+            (username,)
+        ).fetchone()
+
+        conn.close()
+
+        if user is None:
+            return "ユーザーが存在しません"
+        
+        # passwordをhash化してpassword hashと一致するかをチェックする
+        if not check_password_hash(user["password_hash"], password):
+            return "パスワードが違います"
+        
+        session["user_id"] = user["id"]
+        session["username"] = user["username"]
+
+        return redirect(url_for("index"))
+    
+    return render_template("login.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
