@@ -9,15 +9,20 @@
     
     <!-- セッションの識別 -->
     {% if session.get("username") %}
-        <p>ログイン中: {{% session.get("username") %}}</p>
+        <p>ログイン中: {{ session.get("username") }}</p>
     {% else %}
         <p>ログインしていません</p>
     {% endif %}
 
+    <!-- ログイン中とログアウト中で分ける -->
     <p>
         <a href="/register">ユーザー登録</a>
         |
-        <a href="/login">ログイン</a>
+        {% if session.get("username") %}
+            <a href="/logout">ログアウト</a>
+        {% else %}
+            <a href="/login">ログイン</a>
+        {% ednif %}
     </p>
 
     <!-- メモ入力フォーム -->
