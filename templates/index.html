@@ -7,22 +7,11 @@
 <body>
     <h1>Memo App</h1>
     
-    <!-- セッションの識別 -->
-    {% if session.get("username") %}
-        <p>ログイン中: {{ session.get("username") }}</p>
-    {% else %}
-        <p>ログインしていません</p>
-    {% endif %}
+    <!-- ログインユーザー名 -->
+    <p>ログイン中: {{ session.get("username") }}</p>
 
-    <!-- ログイン中とログアウト中で分ける -->
     <p>
-        <a href="/register">ユーザー登録</a>
-        |
-        {% if session.get("username") %}
-            <a href="/logout">ログアウト</a>
-        {% else %}
-            <a href="/login">ログイン</a>
-        {% ednif %}
+        <a href="/logout">ログアウト</a>
     </p>
 
     <!-- メモ入力フォーム -->
@@ -35,9 +24,13 @@
 
     <!-- DBに記録したメモを表示 -->
     {% for memo in memos %}
+    <div>
         <p>{{ memo["content"] }}</p>
         <small>{{ memo["created_at"] }}</small>
-        <hr>
+    </div>
+    <hr>
+    {% else %}
+        <p>まだメモはありません</p>
     {% endfor %}
 </body>
 </html>

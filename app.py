@@ -20,6 +20,9 @@ def get_db_connection():
 # /でGET, POSTの両方を受け付ける
 @app.route("/", methods=["GET", "POST"])
 def index():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
     conn = get_db_connection()
 
     if request.method == "POST":
@@ -27,8 +30,8 @@ def index():
         content = request.form["content"]
         
         conn.execute(
-            "INSERT INTO memos (content) VALUES (?)",
-            (content,)
+            "INSERT INTO memos (user_id, content) VALUES (?, ?)",
+            (session["user_id"], content)
         )
         conn.commit()
         conn.close()
@@ -36,7 +39,8 @@ def index():
         return redirect(url_for("index"))
 
     memos = conn.execute(
-        "SELECT * FROM  memos ORDER BY created_at DESC"
+        "SELECT * FROM  memos WHERE user_id = ? ORDER BY created_at DESC",
+        (session["user_id"],)
     ).fetchall()
 
     conn.close()
@@ -68,7 +72,7 @@ def register():
 
         conn.close()
         # indexに戻る
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
     
     return render_template("register.html")
 
