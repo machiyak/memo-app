@@ -20,6 +20,7 @@ def get_db_connection():
 # /でGET, POSTの両方を受け付ける
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # ログインされていなかったらログインページへリダイレクト
     if "user_id" not in session:
         return redirect(url_for("login"))
     
@@ -28,7 +29,7 @@ def index():
     if request.method == "POST":
         # フォームの中身受け取る
         content = request.form["content"]
-        
+        # ユーザーIDと一緒にメモを保存する
         conn.execute(
             "INSERT INTO memos (user_id, content) VALUES (?, ?)",
             (session["user_id"], content)
@@ -38,6 +39,7 @@ def index():
         # フォーム再送信を防ぐために"/"にリダイレクト
         return redirect(url_for("index"))
 
+    # ログイン中のユーザーのメモのみ表示する
     memos = conn.execute(
         "SELECT * FROM  memos WHERE user_id = ? ORDER BY created_at DESC",
         (session["user_id"],)
@@ -47,6 +49,24 @@ def index():
 
     # index.htmlをレンダリングする
     return render_template("index.html", memos=memos)
+
+# /delete/memo_idでPOSTを受け付ける
+@app.route("/delete/<int:memo_id>", methods=["POST"])
+def delete_memo(memo_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    conn = get_db_connection()
+
+    conn.execute(
+        # 他人のidを指定してもuser_idが一致しなければ削除されない
+        "DELETE FROM memos WHERE id = ? AND user_id = ?",
+        (memo_id, session["user_id"])
+    )
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("index"))
 
 # /registerでregister.htmlをレンダリング
 @app.route("/register", methods=["GET", "POST"])
