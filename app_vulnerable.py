@@ -38,7 +38,7 @@ def index():
 
     conn.close()
 
-    return render_template("index.html", memos=memos)
+    return render_template("index_vulnerable.html", memos=memos)
 
 @app.route("/delete/<int:memo_id>", methods=["POST"])
 def delete_memo(memo_id):
@@ -97,16 +97,12 @@ def login():
         WHERE username = '{username}'
         AND password_hash = '{password}'
         """
-        user = conn.execute(query).fetchone
+        user = conn.execute(query).fetchone()
 
         conn.close()
 
         if user is None:
             return "ユーザーが存在しません"
-        
-        # passwordをhash化してpassword hashと一致するかをチェックする
-        if not check_password_hash(user["password_hash"], password):
-            return "パスワードが違います"
         
         session["user_id"] = user["id"]
         session["username"] = user["username"]
