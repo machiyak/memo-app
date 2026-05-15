@@ -40,7 +40,7 @@ AND password_hash = 'anything'
 `'1' = '1'`は常に真でその後はコメントアウトされるため、queryは
 ```python
 SELECT * FROM users
-WHERE username = user' OR TRUE
+WHERE username = 'Suser' OR TRUE
 ```
 となり、この場合はパスワードなしで`user`にログインできてしまう。
 
