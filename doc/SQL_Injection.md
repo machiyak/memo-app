@@ -24,7 +24,7 @@ user = conn.execute(query).fetchone()
 
 この実装では、`username` や `password` の内容が、単なる値ではなくSQL文として解釈される可能性がある。
 
-例えば、ユーザー名として`user' OR '1'='1' --`のような値が入力されるとqueryは
+例えば、ユーザー名として `user' OR '1'='1' --` のような値が入力されるとqueryは
 
 ```python
 SELECT * FROM users
@@ -37,12 +37,12 @@ username = 'user'
 OR '1' = '1' --'
 AND password_hash = 'anything'
 ```
-`'1' = '1'`は常に真でその後はコメントアウトされるため、queryは
+`'1' = '1'` は常に真でその後はコメントアウトされるため、queryは
 ```python
 SELECT * FROM users
-WHERE username = 'Suser' OR TRUE
+WHERE username = 'user' OR TRUE
 ```
-となり、この場合はパスワードなしで`user`にログインできてしまう。
+となり、この場合はパスワードなしで `user` にログインできてしまう。
 
 
 ---
