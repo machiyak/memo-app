@@ -1,4 +1,5 @@
 import sqlite3
+import secrets
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -11,6 +12,21 @@ def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
+
+def get_csrf_token():
+    if "csrf_token" not in session:
+        session["csrf_token"] = secrets.token_hex(32)
+    return session["csrf_token"]
+
+def validate_csrf_token():
+    token_in_session = session.get("csrf_token")
+    token_in_form = request.form.get("csrf_token")
+
+    return token_in_session is not None and token_in_session == token_in_form
+
+@app.context_processor
+def inject_csrf_token():
+    return dict(csrf_token=get_csrf_token())
 
 @app.route("/", methods=["GET", "POST"])
 def index():
