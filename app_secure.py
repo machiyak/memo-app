@@ -36,6 +36,10 @@ def index():
     conn = get_db_connection()
 
     if request.method == "POST":
+        if not validate_csrf_token():
+            conn.close()
+            return "不正なリクエストです", 400
+
         content = request.form["content"]
         conn.execute(
             "INSERT INTO memos (user_id, content) VALUES (?, ?)",
@@ -59,6 +63,9 @@ def index():
 def delete_memo(memo_id):
     if "user_id" not in session:
         return redirect(url_for("login"))
+    
+    if not validate_csrf_token():
+        return "不正なリクエストです", 400
     
     conn = get_db_connection()
 
@@ -127,8 +134,10 @@ def login():
     
     return render_template("login.html")
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
 def logout():
+    if not validate_csrf_token():
+        return "不正なリクエストです", 400
     session.clear()
     return redirect(url_for("index"))
 
